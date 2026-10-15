@@ -1,7 +1,8 @@
 """Contract tests for POST /api/agent/<guid>/checkin/ (Exercise 3).
 
-These tests ARE the specification. They fail against the stub you are given -
-make them pass. They are ordered by priority: get the first ones green first.
+These tests are the specification. They fail against the stub you start from
+and the exercise is done when they pass. They are in priority order: make the
+first ones pass first.
 """
 
 from datetime import datetime, timezone

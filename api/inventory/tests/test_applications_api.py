@@ -1,7 +1,7 @@
 """Contract tests for GET /api/applications/ (Exercise 1).
 
-These tests ARE the specification. They fail against the stub you are given -
-make them pass. Run them with `make test-api` or `cd api && pytest`.
+These tests are the specification. They fail against the stub you start from
+and the exercise is done when they pass. They are in priority order.
 """
 
 from datetime import timedelta
@@ -56,17 +56,6 @@ def test_scopes_results_to_the_request_tenant(api_client, tenant, other_tenant, 
     response = api_client.get(APPLICATIONS_URL, headers={'X-Tenant-Id': tenant.id})
 
     assert [item['name'] for item in response.data['items']] == ['mine']
-
-
-def test_excludes_applications_on_non_billable_devices(api_client, tenant, make_device, make_application):
-    billable_device = make_device(tenant=tenant, hostname='billable')
-    free_device = make_device(tenant=tenant, hostname='not-billable', is_billable=False)
-    make_application(tenant=tenant, device=billable_device, name='visible')
-    make_application(tenant=tenant, device=free_device, name='hidden')
-
-    response = api_client.get(APPLICATIONS_URL, headers={'X-Tenant-Id': tenant.id})
-
-    assert [item['name'] for item in response.data['items']] == ['visible']
 
 
 def test_filters_by_name_case_insensitively(api_client, tenant, make_application):
@@ -125,7 +114,6 @@ def test_serializes_display_labels_and_derived_fields(api_client, tenant, make_d
         device=device,
         name='nginx',
         version='1.18.0',
-        type=Application.AppType.WEB,
         status=Application.StatusType.NOT_SEEN,
         risk_level=Application.RiskLevelType.HIGH,
         is_scanned=True,
@@ -138,7 +126,6 @@ def test_serializes_display_labels_and_derived_fields(api_client, tenant, make_d
     assert item['device_id'] == device.id
     assert item['version'] == '1.18.0'
     # Human readable labels, not raw DB values.
-    assert item['type'] == 'Web'
     assert item['status'] == 'Not Seen on Last Scan'
     assert item['risk_level'] == 'High'
     assert item['scan_type'] == 'Scanned'

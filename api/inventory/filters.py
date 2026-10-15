@@ -12,7 +12,6 @@ class ApplicationFilter(filters.FilterSet):
     device_id = filters.NumberFilter(field_name='device_id')
     discovered_on = filters.DateTimeFromToRangeFilter()
     last_seen = filters.DateTimeFromToRangeFilter()
-    type = filters.MultipleChoiceFilter(choices=Application.AppType.choices, widget=CSVWidget, distinct=False)
     status = filters.MultipleChoiceFilter(choices=Application.StatusType.choices, widget=CSVWidget, distinct=False)
     risk_level = filters.MultipleChoiceFilter(
         choices=Application.RiskLevelType.choices, widget=CSVWidget, distinct=False
@@ -22,7 +21,6 @@ class ApplicationFilter(filters.FilterSet):
         model = Application
         fields = [
             'name',
-            'type',
             'hostname',
             'device_id',
             'status',

@@ -6,6 +6,6 @@ httpx==0.28.1
 pytest==8.3.4
 pytest-django==4.9.0
 
-# Type stubs - editor hover/completion only, nothing at runtime.
+# Type stubs: editor hover and completion only, nothing at runtime.
 django-stubs==6.0.9
 djangorestframework-stubs==3.18.0

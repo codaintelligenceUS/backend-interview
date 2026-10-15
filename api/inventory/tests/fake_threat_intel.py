@@ -6,7 +6,7 @@ test can read which CVE affects which version. On top of that the transport:
 
   * records every request, so a test can check what was sent;
   * can play dead (`down = True`) or die after N requests (`fail_after = N`);
-  * shuffles the order of mapped applications - Threat Intel does not promise to keep
+  * shuffles the order of mapped applications; Threat Intel does not promise to keep
     the order it was given, so neither does this.
 """
 

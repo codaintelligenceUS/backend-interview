@@ -32,7 +32,7 @@ MAX_CVE_BATCH_SIZE = 100
 
 
 # --------------------------------------------------------------------------- #
-# Schemas - the field names are the real ones.
+# Schemas. The field names are the real ones.
 # --------------------------------------------------------------------------- #
 
 
@@ -144,7 +144,7 @@ def create_app(catalogue: Catalogue | None = None, api_key: str | None = None, l
 
     @app.get('/api/search/cve-details/{cve_id}/', dependencies=[Depends(require_api_key), Depends(simulate_latency)])
     async def cve_details(cve_id: str) -> dict:
-        """One CVE. Unknown ids return `{}` with a 200, exactly like the real thing."""
+        """One CVE. Unknown ids return `{}` with a 200, like the real one."""
         cve = catalogue.get_cve(cve_id)
         return cve.document() if cve else {}
 

@@ -6,7 +6,7 @@ from rest_framework.views import APIView
 from inventory import openapi
 from inventory.tenant import get_tenant_id
 
-# Everything you need is already here - it is just not wired up:
+# Imports you will probably need:
 # from django.db import transaction
 # from inventory.models import Application, Device
 
@@ -22,7 +22,7 @@ class ReportedOsSerializer(serializers.Serializer):
 
 
 class AgentCheckinSerializer(serializers.Serializer):
-    """What the agent sends on every check-in. Given - the shape is fixed."""
+    """What the agent sends on every check-in. Given; the shape is fixed."""
 
     reported_at = serializers.DateTimeField()
     hostname = serializers.CharField(max_length=255)
@@ -32,30 +32,33 @@ class AgentCheckinSerializer(serializers.Serializer):
 
 
 class AgentCheckinView(APIView):
-    """Agent check-in. `POST /api/agent/<agent_guid>/checkin/`
+    """Exercise 3, agent check-in: `POST /api/agent/<agent_guid>/checkin/`
 
-    Exercise 3. The agent installed on a device posts its full inventory on
-    every check-in. Turn that payload into Device and Application rows.
-    `api/inventory/tests/test_agent_checkin_api.py` is the spec.
+    Spec: `api/inventory/tests/test_agent_checkin_api.py`. The payload is
+    already validated by `AgentCheckinSerializer` above; its shape is fixed.
 
-    TODO(1): Find the device for `agent_guid` within the request's tenant, or
-             create it. Either way, store hostname, ip_address, os name and
-             version, and `last_checkin = reported_at`.
-             Answer 201 when the device was created, 200 when it already existed.
-    TODO(2): Reject a payload whose `reported_at` is older than the device's
-             `last_checkin` with 409 - agents retry and the network reorders.
-    TODO(3): Diff the reported applications against the device's stored ones.
-             An application is identified by (name, version):
-               - not stored yet          -> create it: status=online,
-                                            discovered_on and last_seen = reported_at
-               - stored and reported     -> status=online, last_seen = reported_at
-               - stored but not reported -> status=offline, nothing else changes
-    TODO(4): Respond with
-             {'device_id': int, 'created': bool,
-              'applications': {'added': int, 'seen': int, 'offline': int}}
-    TODO(5): A check-in is one unit of work: all of it is stored or none of it.
-             And an agent may report hundreds of packages - the number of
-             queries must not grow with the number of applications.
+    Steps, in priority order. The tests are in the same order:
+
+    1. Device. Find the device with this `agent_guid` in the request's tenant,
+       or create it. Either way store hostname, ip_address, os name and version,
+       and `last_checkin = reported_at`. Answer 201 when created, 200 when it
+       already existed, with:
+           {'device_id': int, 'created': bool,
+            'applications': {'added': int, 'seen': int, 'offline': int}}
+    2. Applications. An application is identified by (name, version). Compare
+       the reported list with the device's stored applications:
+           reported, not stored   -> create it: status=online,
+                                     discovered_on = last_seen = reported_at
+           reported and stored    -> status=online, last_seen = reported_at
+           stored, not reported   -> status=offline, nothing else changes
+       A new version of a stored application is a new application.
+    3. Stale payloads. If `reported_at` is older than the device's
+       `last_checkin`, answer 409 and change nothing. Agents retry and
+       networks reorder.
+    4. Tenants. The same `agent_guid` in another tenant is another device.
+    5. Cost and atomicity. Hundreds of packages per check-in are normal: the
+       number of queries must not grow with the number of applications. And a
+       check-in is one unit of work: all of it is stored, or none of it.
     """
 
     @openapi.agent_checkin
@@ -63,8 +66,7 @@ class AgentCheckinView(APIView):
         serializer = AgentCheckinSerializer(data=request.data)
         serializer.is_valid(raise_exception=True)
 
-        # Rename once you actually use them.
-        _tenant_id = get_tenant_id(request)
-        _payload = serializer.validated_data
+        tenant_id = get_tenant_id(request)
+        payload = serializer.validated_data
 
         return Response({'detail': 'Not implemented'}, status=501)

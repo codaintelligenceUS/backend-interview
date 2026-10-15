@@ -1,11 +1,10 @@
 """Contract tests for GET /api/devices/ (Exercise 2).
 
-These tests ARE the specification. They all fail against the endpoint you are
-given: it is functionally correct but it runs a handful of queries *per device*,
-and every test here caps the whole listing at `MAX_QUERIES`. Make them pass
-without changing the response shape. `make seed` gives you enough data to
-*feel* the problem: hit `/api/devices/` with `X-Tenant-Id: 1` and read
-`elapsed_ms` before you fix it.
+These tests are the specification. They all fail against the view you start
+from: it is correct, but it is slow, and every test here caps the whole
+listing at `MAX_QUERIES`. Make them pass without changing
+the response shape. `make seed` gives you enough data to see the problem: call
+`/api/devices/` with `X-Tenant-Id: 1` and read `elapsed_ms` before you fix it.
 """
 
 import pytest

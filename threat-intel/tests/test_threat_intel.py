@@ -1,4 +1,4 @@
-"""Sanity tests for the simulated Threat Intel. Not an exercise - they pass as given."""
+"""Sanity tests for the simulated Threat Intel. Not an exercise; they pass as given."""
 
 import pytest
 from fastapi.testclient import TestClient

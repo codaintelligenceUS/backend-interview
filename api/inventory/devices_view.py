@@ -29,31 +29,28 @@ class DeviceListSerializer(serializers.ModelSerializer):
         ]
 
     def get_application_count(self, device: Device) -> int:
-        return len(list(device.applications.all()))
+        return Application.objects.filter(device=device).count()
 
     def get_online_count(self, device: Device) -> int:
         return Application.objects.filter(device=device, status=Application.StatusType.ONLINE).count()
 
     def get_application_names(self, device: Device) -> list[str]:
-        return [application.name for application in list(device.applications.all())]
+        return [application.name for application in Application.objects.filter(device=device)]
 
 
 class DeviceListView(APIView):
-    """
-    Devices listing view.
+    """Exercise 2, devices listing: `GET /api/devices/`
 
-    Exercise 2 - make this view as fast as possible. It is functionally correct:
-    it returns the right devices, with the right counts, in the right order. It
-    is also slow, and it gets slower with every row - every test in
-    `api/inventory/tests/test_devices_api.py` caps the whole listing at 3
-    queries, and none of them passes today.
+    Spec: `api/inventory/tests/test_devices_api.py`.
 
-    How you get there is your call: ORM annotations, or a couple of plain
-    queries and a dict. The tests only count queries and check the shape.
+    This view is correct and slow. It returns the right devices, counts and
+    order, and it gets slower with every device. Every test caps the whole
+    listing at 3 queries, however many devices there are, and all of them fail
+    today.
 
-    The response shape is fixed: `items`, `total_count` and `elapsed_ms` must
-    keep looking exactly like they do now. Hit the endpoint and read
-    `elapsed_ms` before and after.
+    Make them pass without changing the response: `items`, `total_count` and
+    `elapsed_ms` must keep the exact shape they have now. How you get there is
+    your call. Read `elapsed_ms` before and after.
     """
 
     @openapi.devices_list

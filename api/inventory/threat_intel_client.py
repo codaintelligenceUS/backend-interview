@@ -118,7 +118,7 @@ class ThreatIntelClient:
 
     def cve_list_details(self, cve_ids: Iterable[str]) -> list[CveDetails]:
         """Details for a batch of CVE ids. The batch must not exceed
-        `settings.THREAT_INTEL_MAX_CVE_BATCH_SIZE` - chunking is the caller's job."""
+        `settings.THREAT_INTEL_MAX_CVE_BATCH_SIZE`; chunking is the caller's job."""
         documents = self._request('POST', '/api/search/cve-list-details/', json={'cve_list': list(cve_ids)}).json()
         return [_flatten_cve_document(document) for document in documents]
 

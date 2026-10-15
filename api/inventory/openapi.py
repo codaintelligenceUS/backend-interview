@@ -1,4 +1,4 @@
-"""OpenAPI descriptions for the exercise endpoints - http://localhost:8000/api/docs/
+"""OpenAPI descriptions for the exercise endpoints, served at http://localhost:8000/api/docs/
 
 Documentation only: nothing here changes how a view behaves and no test looks
 at it. Each view applies one of these decorators to its handler so the Swagger
@@ -18,10 +18,10 @@ def _choices(choices) -> str:
 
 applications_list = extend_schema(
     operation_id='applications_list',
-    summary='Exercise 1 - applications listing',
+    summary='Exercise 1: applications listing',
     description=(
         'Server-driven table: pagination, filtering, free-text search and sorting all happen here. '
-        'Lists the applications on billable devices of the request tenant.'
+        'Lists the applications of the request tenant.'
     ),
     parameters=[
         OpenApiParameter('page', int, description='1-based page number. Default 1.'),
@@ -33,7 +33,6 @@ applications_list = extend_schema(
         OpenApiParameter('device_id', int),
         OpenApiParameter('status', str, description=f'Comma-separated. One of: {_choices(Application.StatusType)}.'),
         OpenApiParameter('risk_level', str, description=f'Comma-separated. One of: {_choices(Application.RiskLevelType)}.'),
-        OpenApiParameter('type', str, description=f'Comma-separated. One of: {_choices(Application.AppType)}.'),
     ],
     responses={200: OpenApiTypes.OBJECT},
     examples=[
@@ -43,7 +42,7 @@ applications_list = extend_schema(
             value={
                 'items': [
                     {
-                        'id': 1, 'name': 'nginx', 'version': '1.18.0', 'type': 'Web', 'hostname': 'acme-web-01',
+                        'id': 1, 'name': 'nginx', 'version': '1.18.0', 'hostname': 'acme-web-01',
                         'device_id': 1, 'status': 'Online', 'risk_level': 'High',
                         'discovered_on': '2026-10-01T09:00:00Z', 'last_seen': '2026-10-15T09:00:00Z',
                         'last_scanned': None, 'scan_type': 'Discovered',
@@ -57,7 +56,7 @@ applications_list = extend_schema(
 
 devices_list = extend_schema(
     operation_id='devices_list',
-    summary='Exercise 2 - devices listing (performance)',
+    summary='Exercise 2: devices listing (performance)',
     description=(
         'Every device of the request tenant with its application counts, sorted by hostname. '
         'Functionally correct and slow: `elapsed_ms` is the server-side time for the request.'
@@ -82,7 +81,7 @@ devices_list = extend_schema(
 
 agent_checkin = extend_schema(
     operation_id='agent_checkin',
-    summary='Exercise 3 - agent check-in',
+    summary='Exercise 3: agent check-in',
     description=(
         'The agent installed on a device posts its full inventory on every check-in. '
         'The Platform API resolves the device by `agent_guid` within the tenant, creates it if needed, and diffs '
@@ -119,9 +118,9 @@ agent_checkin = extend_schema(
 
 vulnerability_scan = extend_schema(
     operation_id='vulnerability_scan',
-    summary='Exercise 4 - vulnerability scan through Threat Intel',
+    summary='Exercise 4: vulnerability scan through Threat Intel',
     description=(
-        'Sends the device\'s OS and enabled applications to Threat Intel, stores the CVEs it names, fetches the '
+        'Sends the device\'s OS and applications to Threat Intel, stores the CVEs it names, fetches the '
         'details the Platform API does not already have, reconciles open/fixed and recomputes each application\'s '
         '`risk_level`. Needs the simulated Threat Intel running on :8001 (`make dev` or `make dev-threat-intel`).'
     ),

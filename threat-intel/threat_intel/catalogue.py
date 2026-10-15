@@ -1,6 +1,6 @@
 """The CVE catalogue: products, CVEs and the version ranges that connect them.
 
-The real thing is NVD's `configurations` block indexed in Elasticsearch. Here a
+The real thing is NVD's `configurations` block in a search index. Here a
 CVE lists the products and version ranges it affects, straight from JSON.
 """
 
@@ -148,7 +148,7 @@ class Catalogue:
     def map_product(self, product_name: str, version: str) -> tuple[str | None, list[str]]:
         """Return `(cpe, cve_ids)` for a reported name + version.
 
-        Unknown products and empty versions map to nothing - Threat Intel would rather
+        Unknown products and empty versions map to nothing; Threat Intel would rather
         say nothing than guess.
         """
         product = self.resolve_product(product_name)

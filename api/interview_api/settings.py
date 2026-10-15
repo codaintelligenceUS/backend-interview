@@ -53,7 +53,7 @@ REST_FRAMEWORK = {
     'DEFAULT_SCHEMA_CLASS': 'drf_spectacular.openapi.AutoSchema',
 }
 
-# Interactive docs at /api/docs/ - see inventory/openapi.py. Documentation only.
+# Interactive docs at /api/docs/, see inventory/openapi.py. Documentation only.
 SPECTACULAR_SETTINGS = {
     'TITLE': 'Platform API (simulated)',
     'VERSION': '0.1.0',

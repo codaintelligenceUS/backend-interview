@@ -42,7 +42,6 @@ def make_device(db) -> Callable[..., Device]:
     def _make_device(
         tenant: Tenant,
         hostname: str = 'srv-01',
-        is_billable: bool = True,
         agent_guid: str | None = None,
         os_name: str = 'Ubuntu',
         os_version: str = '22.04',
@@ -51,7 +50,6 @@ def make_device(db) -> Callable[..., Device]:
             tenant=tenant,
             hostname=hostname,
             ip_address='10.0.0.1',
-            is_billable=is_billable,
             agent_guid=agent_guid,
             os_name=os_name,
             os_version=os_version,

@@ -12,5 +12,5 @@ db.sqlite3
 .vscode/
 *.log
 
-# reference solutions and notes - never published
+# reference solutions and notes, never published
 interviewer/

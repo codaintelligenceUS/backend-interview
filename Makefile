@@ -3,7 +3,7 @@
 PY := .venv/bin/python
 
 # ---------------------------------------------------------------------------- #
-# Setup - run once
+# Setup (run once)
 # ---------------------------------------------------------------------------- #
 
 setup:
@@ -14,7 +14,7 @@ setup:
 	.venv/bin/pip install --quiet -r api/requirements.txt -r threat-intel/requirements.txt
 	$(MAKE) seed
 	@echo ""
-	@echo "Done. Run 'make dev' - Platform API on :8000, Threat Intel on :8001"
+	@echo "Done. Run 'make dev': Platform API on :8000, Threat Intel on :8001"
 
 # ---------------------------------------------------------------------------- #
 # Run
@@ -46,7 +46,7 @@ reset-db:
 	$(MAKE) seed
 
 # ---------------------------------------------------------------------------- #
-# Tests - the Platform API suite is the spec. Green means done.
+# Tests. The Platform API suite is the spec; green means done.
 # ---------------------------------------------------------------------------- #
 
 # Runs both suites even when the first one fails; the exit code still says so.
