@@ -18,7 +18,6 @@ INSTALLED_APPS = [
     'django.contrib.auth',
     'django.contrib.staticfiles',
     'rest_framework',
-    'django_filters',
     'drf_spectacular',
     'inventory',
 ]

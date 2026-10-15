@@ -29,10 +29,7 @@ applications_list = extend_schema(
         OpenApiParameter('search', str, description='Free text over application name and device hostname.'),
         OpenApiParameter('ordering', str, description="Sort field, prefix with '-' for descending. Default '-discovered_on'."),
         OpenApiParameter('name', str, description='Case-insensitive contains.'),
-        OpenApiParameter('hostname', str, description='Case-insensitive contains on the device hostname.'),
-        OpenApiParameter('device_id', int),
         OpenApiParameter('status', str, description=f'Comma-separated. One of: {_choices(Application.StatusType)}.'),
-        OpenApiParameter('risk_level', str, description=f'Comma-separated. One of: {_choices(Application.RiskLevelType)}.'),
     ],
     responses={200: OpenApiTypes.OBJECT},
     examples=[
@@ -43,9 +40,9 @@ applications_list = extend_schema(
                 'items': [
                     {
                         'id': 1, 'name': 'nginx', 'version': '1.18.0', 'hostname': 'acme-web-01',
-                        'device_id': 1, 'status': 'Online', 'risk_level': 'High',
+                        'device_id': 1, 'status': 'online', 'risk_level': 'high',
                         'discovered_on': '2026-10-01T09:00:00Z', 'last_seen': '2026-10-15T09:00:00Z',
-                        'last_scanned': None, 'scan_type': 'Discovered',
+                        'last_scanned': None,
                     }
                 ],
                 'page': 1, 'total_pages': 4, 'total_count': 93,
@@ -59,7 +56,7 @@ devices_list = extend_schema(
     summary='Exercise 2: devices listing (performance)',
     description=(
         'Every device of the request tenant with its application counts, sorted by hostname. '
-        'Functionally correct and slow: `elapsed_ms` is the server-side time for the request.'
+        'Functionally correct and slow.'
     ),
     responses={200: OpenApiTypes.OBJECT},
     examples=[
@@ -73,7 +70,7 @@ devices_list = extend_schema(
                         'application_count': 12, 'online_count': 11, 'application_names': ['nginx', 'sshd'],
                     }
                 ],
-                'total_count': 20, 'elapsed_ms': 184,
+                'total_count': 20,
             },
         )
     ],
@@ -122,7 +119,7 @@ vulnerability_scan = extend_schema(
     description=(
         'Sends the device\'s OS and applications to Threat Intel, stores the CVEs it names, fetches the '
         'details the Platform API does not already have, reconciles open/fixed and recomputes each application\'s '
-        '`risk_level`. Needs the simulated Threat Intel running on :8001 (`make dev` or `make dev-threat-intel`).'
+        '`risk_level` and `last_scanned`. Needs the simulated Threat Intel running on :8001 (`make dev` or `make dev-threat-intel`).'
     ),
     request=None,
     responses={

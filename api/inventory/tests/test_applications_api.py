@@ -67,14 +67,16 @@ def test_filters_by_name_case_insensitively(api_client, tenant, make_application
     assert [item['name'] for item in response.data['items']] == ['PostgreSQL']
 
 
-def test_filters_by_multiple_statuses(api_client, tenant, make_application):
+def test_filters_by_one_or_more_statuses(api_client, tenant, make_application):
     make_application(tenant=tenant, name='on', status=Application.StatusType.ONLINE)
     make_application(tenant=tenant, name='off', status=Application.StatusType.OFFLINE)
-    make_application(tenant=tenant, name='gone', status=Application.StatusType.DECOMMISSIONED)
+    make_application(tenant=tenant, name='also-on', status=Application.StatusType.ONLINE)
 
-    response = api_client.get(APPLICATIONS_URL, {'status': 'online,offline'}, headers={'X-Tenant-Id': tenant.id})
+    one = api_client.get(APPLICATIONS_URL, {'status': 'offline'}, headers={'X-Tenant-Id': tenant.id})
+    both = api_client.get(APPLICATIONS_URL, {'status': 'online,offline'}, headers={'X-Tenant-Id': tenant.id})
 
-    assert sorted(item['name'] for item in response.data['items']) == ['off', 'on']
+    assert [item['name'] for item in one.data['items']] == ['off']
+    assert sorted(item['name'] for item in both.data['items']) == ['also-on', 'off', 'on']
 
 
 def test_search_matches_name_and_device_hostname(api_client, tenant, make_device, make_application):
@@ -107,37 +109,27 @@ def test_orders_by_device_hostname(api_client, tenant, make_device, make_applica
     assert [item['name'] for item in response.data['items']] == ['first', 'last']
 
 
-def test_serializes_display_labels_and_derived_fields(api_client, tenant, make_device, make_application):
+def test_serializes_an_item_with_its_device(api_client, tenant, make_device, make_application):
     device = make_device(tenant=tenant, hostname='web-01')
-    make_application(
+    application = make_application(
         tenant=tenant,
         device=device,
         name='nginx',
         version='1.18.0',
-        status=Application.StatusType.NOT_SEEN,
+        status=Application.StatusType.OFFLINE,
         risk_level=Application.RiskLevelType.HIGH,
-        is_scanned=True,
     )
 
     response = api_client.get(APPLICATIONS_URL, headers={'X-Tenant-Id': tenant.id})
     item = response.data['items'][0]
 
+    assert item['id'] == application.id
+    assert item['name'] == 'nginx'
+    assert item['version'] == '1.18.0'
     assert item['hostname'] == 'web-01'
     assert item['device_id'] == device.id
-    assert item['version'] == '1.18.0'
-    # Human readable labels, not raw DB values.
-    assert item['status'] == 'Not Seen on Last Scan'
-    assert item['risk_level'] == 'High'
-    assert item['scan_type'] == 'Scanned'
-
-
-def test_scan_type_is_discovered_until_scanned(api_client, tenant, make_application):
-    make_application(tenant=tenant, is_scanned=False)
-
-    response = api_client.get(APPLICATIONS_URL, headers={'X-Tenant-Id': tenant.id})
-    item = response.data['items'][0]
-
-    assert item['scan_type'] == 'Discovered'
+    assert item['status'] == 'offline'
+    assert item['risk_level'] == 'high'
     assert item['last_scanned'] is None
 
 

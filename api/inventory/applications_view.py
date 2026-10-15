@@ -7,7 +7,6 @@ from inventory import openapi
 from inventory.tenant import get_tenant_id
 
 # Imports you will probably need:
-# from inventory.filters import ApplicationFilter
 # from inventory.models import Application
 
 
@@ -15,11 +14,10 @@ class ApplicationListSerializer(serializers.Serializer):
     """The shape of one item in the listing:
 
         id, name, version, hostname, device_id, status, risk_level,
-        discovered_on, last_seen, last_scanned, scan_type
+        discovered_on, last_seen, last_scanned
 
-    `status` and `risk_level` are the human-readable labels, not the
-    stored values. `hostname` is the device's hostname. `scan_type` is
-    'Scanned' when `is_scanned` is true, otherwise 'Discovered'.
+    `status` and `risk_level` are the stored values. `hostname` is the
+    device's hostname.
     """
 
 
@@ -38,8 +36,6 @@ class ApplicationListView(GenericAPIView):
        list), `search` (matches name or device hostname) and `ordering` (a field
        name, `-` prefix for descending; `hostname` sorts by the device's
        hostname). Default ordering: newest `discovered_on` first.
-       `ApplicationFilter` in filters.py is there if you want django-filter;
-       plain queryset filters are just as good.
     4. Items: the shape described in `ApplicationListSerializer` above. Use that
        serializer or build the dicts yourself.
     5. Cost: the device hostname lives on another table. Do not run one query

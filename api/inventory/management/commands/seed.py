@@ -37,8 +37,8 @@ class Command(BaseCommand):
         acme = Tenant.objects.create(id=1, name='Acme Industries')
         globex = Tenant.objects.create(id=2, name='Globex')
 
-        # Acme is deliberately large: exercise 2 needs enough rows for a query
-        # per device to show up in `elapsed_ms`, not just in a profiler.
+        # Acme is large on purpose: exercise 2 needs enough rows for a query per
+        # device to show up in the response time, not just in a profiler.
         self._seed_tenant(tenant=acme, devices_count=2400, hostname_prefix='acme')
         self._seed_tenant(tenant=globex, devices_count=5, hostname_prefix='globex')
 
@@ -72,7 +72,7 @@ class Command(BaseCommand):
         for device_index, device in enumerate(devices):
             for app_index, (name, versions) in enumerate(APP_NAMES):
                 offset = device_index * len(APP_NAMES) + app_index
-                is_scanned = offset % 3 != 0
+                scanned = offset % 3 != 0
 
                 applications.append(
                     Application(
@@ -82,10 +82,9 @@ class Command(BaseCommand):
                         version=versions[(device_index + app_index) % len(versions)],
                         status=STATUSES[offset % len(STATUSES)],
                         risk_level=RISK_LEVELS[offset % len(RISK_LEVELS)],
-                        is_scanned=is_scanned,
                         discovered_on=now - timedelta(hours=offset * 2, minutes=17),
                         last_seen=now - timedelta(minutes=offset * 7),
-                        last_scanned=now - timedelta(minutes=offset * 7) if is_scanned else None,
+                        last_scanned=now - timedelta(minutes=offset * 7) if scanned else None,
                     )
                 )
 

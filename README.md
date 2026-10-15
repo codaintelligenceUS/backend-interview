@@ -106,13 +106,13 @@ Each exercise below also has a `curl` example.
 
 ## Exercise 1: Applications listing
 
-A server-driven table of applications: pagination, filtering, search and
-sorting all happen in the API.
+A listing endpoint for applications, with pagination, filtering, search and
+ordering.
 
 |          |                                                                                              |
 | -------- | -------------------------------------------------------------------------------------------- |
 | Work in  | [api/inventory/applications_view.py](api/inventory/applications_view.py)                     |
-| Given    | `models.py`, `filters.py`, `tenant.py`                                                       |
+| Given    | `models.py`, `tenant.py`                                                                     |
 | Spec     | [api/inventory/tests/test_applications_api.py](api/inventory/tests/test_applications_api.py) |
 | Route    | `GET /api/applications/?page=1&size=25&name=&status=&search=&ordering=-discovered_on`        |
 | Response | `{items, page, total_pages, total_count}`                                                    |
@@ -127,8 +127,7 @@ curl -s 'localhost:8000/api/applications/?search=web&ordering=hostname&size=5' -
 
 ## Exercise 2: Devices listing (performance)
 
-The devices listing returns the right data and is very slow. Each response
-reports its own `elapsed_ms`.
+The devices listing returns the right data and is very slow.
 
 |         |                                                                                                              |
 | ------- | ------------------------------------------------------------------------------------------------------------ |
@@ -138,11 +137,11 @@ reports its own `elapsed_ms`.
 | Route   | `GET /api/devices/`                                                                                          |
 
 Make the tests pass without changing the response shape. Every test caps the
-whole listing at 3 queries, however many devices there are. Read `elapsed_ms`
-before and after:
+whole listing at 3 queries, however many devices there are. Time it before
+and after:
 
 ```bash
-curl -s localhost:8000/api/devices/ -H 'X-Tenant-Id: 1' | python3 -c 'import sys,json; print(json.load(sys.stdin)["elapsed_ms"], "ms")'
+curl -s -o /dev/null -w '%{time_total}s\n' localhost:8000/api/devices/ -H 'X-Tenant-Id: 1'
 ```
 
 ## Exercise 3: Agent check-in
@@ -203,7 +202,7 @@ and its bigger catalogue:
 
 ```bash
 curl -s -X POST localhost:8000/api/devices/1/vulnerability-scan/ -H 'X-Tenant-Id: 1'
-curl -s 'localhost:8000/api/applications/?device_id=1' -H 'X-Tenant-Id: 1'   # once exercise 1 works
+curl -s 'localhost:8000/api/applications/?search=acme-srv-001' -H 'X-Tenant-Id: 1'   # once exercise 1 works
 ```
 
 ---
@@ -215,7 +214,6 @@ api/
   interview_api/              Django project (settings, urls)
   inventory/
     models.py                 Tenant, Device, Application, Vulnerability, ApplicationVulnerability (given)
-    filters.py                ApplicationFilter (given)
     tenant.py                 X-Tenant-Id to tenant id (given)
     threat_intel_client.py    HTTP client for Threat Intel (given)
     openapi.py                what /api/docs/ shows per endpoint (given, docs only)
