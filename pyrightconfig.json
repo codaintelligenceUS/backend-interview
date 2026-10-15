@@ -1,0 +1,9 @@
+{
+  "venvPath": ".",
+  "venv": ".venv",
+  "extraPaths": ["api", "threat-intel"],
+  "exclude": [".venv", "**/__pycache__"],
+  "// why": "Django adds `id`, `tenant_id` and reverse relations like `device.applications` at runtime; without the mypy plugin pyright reports them as missing. Not real errors.",
+  "reportAttributeAccessIssue": "none",
+  "reportIncompatibleVariableOverride": "none"
+}

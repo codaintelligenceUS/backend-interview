@@ -1,0 +1,15 @@
+[
+  {"name": "nginx", "vendor": "nginx", "aliases": ["nginx-core", "nginx-full"]},
+  {"name": "http_server", "vendor": "apache", "aliases": ["apache2", "httpd", "apache"]},
+  {"name": "postgresql", "vendor": "postgresql", "aliases": ["postgres", "postgresql-server"]},
+  {"name": "mysql", "vendor": "oracle", "aliases": ["mysqld", "mysql-server", "mysql-community-server"]},
+  {"name": "redis", "vendor": "redis", "aliases": ["redis-server"]},
+  {"name": "openssh", "vendor": "openbsd", "aliases": ["sshd", "openssh-server", "openssh-client"]},
+  {"name": "rabbitmq", "vendor": "vmware", "aliases": ["rabbitmq-server"]},
+  {"name": "elasticsearch", "vendor": "elastic", "aliases": []},
+  {"name": "grafana", "vendor": "grafana", "aliases": ["grafana-server"]},
+  {"name": "ubuntu_linux", "vendor": "canonical", "part": "o", "aliases": ["ubuntu"]},
+  {"name": "debian_linux", "vendor": "debian", "part": "o", "aliases": ["debian"]},
+  {"name": "windows_10", "vendor": "microsoft", "part": "o", "aliases": ["windows 10"]},
+  {"name": "windows_server_2022", "vendor": "microsoft", "part": "o", "aliases": ["windows server 2022"]}
+]

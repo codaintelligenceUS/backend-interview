@@ -1,0 +1,16 @@
+# python
+.venv/
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.ruff_cache/
+db.sqlite3
+
+# editors / os
+.DS_Store
+.idea/
+.vscode/
+*.log
+
+# reference solutions and notes - never published
+interviewer/
